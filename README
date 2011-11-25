@@ -1,1 +1,13 @@
 The MiaoMiaoVM Main Page.
+
+1. What's MiaoMiaoVM?
+
+  It's a CLR (Common Language Runtime) Virtual Machine written both in Java and Javascript.
+  The Java version is now in progress.
+  The Javascript Version in in plan.
+
+2. Why is It  so called "MiaoMiaoVM"?
+
+  The Project is named by my lovely cat "MiaoMiao".
+  She lives in my hometown and I have not seen her for a long time.
+  I missed her so much!
