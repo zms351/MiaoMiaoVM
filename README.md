@@ -1,6 +1,7 @@
-＃ The MiaoMiaoVM Main Page.
+The MiaoMiaoVM Main Page
+=============
 
-**MiaoMiaoVM is a .Net CLR(Common Language Runtime) Virtual Machine in Java/Javascript
+**MiaoMiaoVM is a .Net CLR(Common Language Runtime) Virtual Machine in Java/Javascript**
 
 ## What's MiaoMiaoVM?
 
