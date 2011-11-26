@@ -1,4 +1,6 @@
 package org.miaomiao.assembly;
 
-public abstract class Assembly {
+import org.miaomiao.assembly.model.BaseDataModel;
+
+public abstract class Assembly extends BaseDataModel {
 }
