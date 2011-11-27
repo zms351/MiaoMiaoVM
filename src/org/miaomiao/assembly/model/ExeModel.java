@@ -17,6 +17,9 @@ public class ExeModel extends Assembly {
      * 00h  old style exe header  32 bytes
      */
     private OldStyleExeHeader oldHeader;
+    /**
+     * 20 bytes
+     */
     private CoffHeader coffHeader;
 
     @Override
@@ -53,6 +56,7 @@ public class ExeModel extends Assembly {
         if(coffHeader==null) {
             coffHeader=new CoffHeader();
         }
+        coffHeader.logger=this.logger;
         coffHeader.parse(reader);
     }
 

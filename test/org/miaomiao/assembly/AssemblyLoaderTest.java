@@ -2,11 +2,17 @@ package org.miaomiao.assembly;
 
 import org.miaomiao.loader.FileInputSource;
 import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.io.File;
 
 public class AssemblyLoaderTest {
+
+    @AfterClass
+    private void after() throws Exception {
+        System.out.println("Test finished");
+        System.out.println(System.in.read());
+    }
 
     @Test
     public void testLoad() throws Exception {
