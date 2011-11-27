@@ -21,6 +21,10 @@ public class ExeModel extends Assembly {
      * 20 bytes
      */
     private CoffHeader coffHeader;
+    /**
+     * 224 bytes
+     */
+    private PEHeader peHeader;
 
     @Override
     public void parse(InputStreamReader reader) throws IOException, LoadException {
@@ -58,6 +62,12 @@ public class ExeModel extends Assembly {
         }
         coffHeader.logger=this.logger;
         coffHeader.parse(reader);
+        //The size of the PE header is not fixed. It depends on the number of data directories defined in the header and is specified in the SizeOfOptionalHeader field of the COFF header.
+        if(peHeader==null) {
+            peHeader=new PEHeader();
+        }
+        peHeader.logger=this.logger;
+        peHeader.parse(reader);
     }
 
 }

@@ -7,10 +7,10 @@ public class InputStreamReader extends InputStream implements Closeable {
     private int position;
     private PushbackInputStream input;
 
-    public static final int PushbackSize = 1024 * 5;
+    public static final int BufferSize = 1024;
 
     public InputStreamReader(InputStream input, int position) {
-        this.input = new PushbackInputStream(input, PushbackSize);
+        this.input = new PushbackInputStream(new BufferedInputStream(input, BufferSize), BufferSize);
         this.position = position;
     }
 
@@ -60,13 +60,13 @@ public class InputStreamReader extends InputStream implements Closeable {
 
     @Override
     public int read(byte[] b) throws IOException {
-        return read(b,0,b.length);
+        return read(b, 0, b.length);
     }
 
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
-        int num=input.read(b,off,len);
-        this.position+=len;
+        int num = input.read(b, off, len);
+        this.position += len;
         return num;
     }
 
@@ -90,19 +90,21 @@ public class InputStreamReader extends InputStream implements Closeable {
     }
 
     public long readUnsignedInt() throws IOException {
-        long ch1 = this.read();
-        int ch2 = this.read();
-        int ch3 = this.read();
-        long ch4 = this.read();
-        return (ch4 << 24) + (ch3 << 16) + (ch2 << 8) + ch1;
+        long ch1 = this.readUnsignedShort();
+        long ch2 = this.readUnsignedShort();
+        return (ch2 << 16) + ch1;
     }
 
     public long readUnsignedInt_BE() throws IOException {
-        long ch1 = this.read();
-        int ch2 = this.read();
-        int ch3 = this.read();
-        long ch4 = this.read();
-        return (ch1 << 24) + (ch2 << 16) + (ch3 << 8) + ch4;
+        long ch1 = this.readUnsignedShort_BE();
+        long ch2 = this.readUnsignedShort_BE();
+        return (ch1 << 16) + ch2;
+    }
+
+    public long readUnsignedLong() throws IOException {
+        long ch1 = this.readUnsignedInt();
+        long ch2 = this.readUnsignedInt();
+        return (ch2 << 32) + ch1;
     }
 
 }
