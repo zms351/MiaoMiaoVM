@@ -156,6 +156,8 @@ public class PEHeader extends BaseDataModel {
      */
     private long numberOfRvaAndSizes;
 
+    private ImageDataDirectory[] dataDirectoryTable;
+
     @Override
     public void parse(InputStreamReader reader) throws IOException, LoadException {
         //magic 0 2
@@ -213,6 +215,17 @@ public class PEHeader extends BaseDataModel {
         this.loaderFlags=reader.readUnsignedInt();
         this.numberOfRvaAndSizes=reader.readUnsignedInt();
         logger.info("read header "+(reader.getPosition()-startPosition)+" bytes");
+        //The data directory table starts at offset 96 in a 32-bit PE header and at offset 112 in a 64-bit PE header.
+        //Sixteen standard data directories are defined in the data directory table
+        if(dataDirectoryTable==null) {
+            dataDirectoryTable=new ImageDataDirectory[16];
+        }
+        for(int i=0;i<16;i++) {
+            if(dataDirectoryTable[i]==null) {
+                dataDirectoryTable[i]=new ImageDataDirectory();
+            }
+            dataDirectoryTable[i].parse(reader);
+        }
     }
 
     public int getMajorLinkerVersion() {
@@ -329,6 +342,10 @@ public class PEHeader extends BaseDataModel {
 
     public long getNumberOfRvaAndSizes() {
         return numberOfRvaAndSizes;
+    }
+
+    public ImageDataDirectory[] getDataDirectoryTable() {
+        return dataDirectoryTable;
     }
 
 }
