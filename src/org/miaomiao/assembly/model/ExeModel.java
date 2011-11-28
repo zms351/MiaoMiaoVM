@@ -25,6 +25,7 @@ public class ExeModel extends Assembly {
      * 224 bytes
      */
     private PEHeader peHeader;
+    private SectionHeader[] sectionHeaders;
 
     @Override
     public void parse(InputStreamReader reader) throws IOException, LoadException {
@@ -68,6 +69,33 @@ public class ExeModel extends Assembly {
         }
         peHeader.logger=this.logger;
         peHeader.parse(reader);
+        //The table of section headers must immediately follow the PE header.
+        int size=this.coffHeader.getNumberOfSections();
+        if(sectionHeaders==null || sectionHeaders.length!=size) {
+            sectionHeaders=new SectionHeader[size];
+        }
+        for(int i=0;i<size;i++) {
+            if(sectionHeaders[i]==null) {
+                sectionHeaders[i]=new SectionHeader();
+            }
+            sectionHeaders[i].parse(reader);
+        }
+    }
+
+    public OldStyleExeHeader getOldHeader() {
+        return oldHeader;
+    }
+
+    public CoffHeader getCoffHeader() {
+        return coffHeader;
+    }
+
+    public PEHeader getPeHeader() {
+        return peHeader;
+    }
+
+    public SectionHeader[] getSectionHeaders() {
+        return sectionHeaders;
     }
 
 }

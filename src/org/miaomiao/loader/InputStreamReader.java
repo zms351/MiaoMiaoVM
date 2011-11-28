@@ -107,4 +107,22 @@ public class InputStreamReader extends InputStream implements Closeable {
         return (ch2 << 32) + ch1;
     }
 
+    public final void readFully(byte b[]) throws IOException {
+        readFully(b, 0, b.length);
+    }
+
+    public final void readFully(byte b[], int off, int len) throws IOException {
+        if (len < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+        int n = 0;
+        while (n < len) {
+            int count = input.read(b, off + n, len - n);
+            if (count < 0)
+                throw new EOFException();
+            n += count;
+        }
+        this.position += n;
+    }
+
 }
