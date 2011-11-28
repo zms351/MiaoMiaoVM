@@ -147,6 +147,7 @@ public class SectionHeader extends BaseDataModel {
                 return;
             }
         }
+        this.data.setHeader(this);
         this.data.parse(reader);
     }
 
