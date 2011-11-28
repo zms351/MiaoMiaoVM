@@ -25,4 +25,11 @@ public abstract class SectionData extends BaseDataModel {
         logger.warn("you should override this method");
     }
 
+    protected void jumpToStart(InputStreamReader reader) throws IOException {
+        SectionHeader header=this.getHeader();
+        long jump=header.getPointerToRawData()-(reader.getPosition()-header.getParent().getBasePosition());
+        logger.debug("%s jump to start by %d",getHeader().getName(),jump);
+        reader.byPass(jump);
+    }
+
 }

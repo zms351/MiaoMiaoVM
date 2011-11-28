@@ -45,21 +45,18 @@ public class ExeModel extends Assembly {
         //old style dos header 32 bytes
         this.oldHeader.parse(reader);
         //20h--3ch reserved  all zero
-        long count=reader.skip(0x1c);
-        assert(count==0x1c);
+        reader.byPass(0x1c);
         //0x3c offset to segment exe header
         final long dataOffset = reader.readUnsignedInt();
         //assert (offset == 0x80);
         //ms dos stub  64bytes
         //This program cannot be run in DOS mode.
-        count=reader.skip(0x40);
-        assert(count==0x40);
+        reader.byPass(0x40);
         int nowPosition=reader.getPosition();
         logger.debug("now position %d",nowPosition);
         long skip=basePosition+dataOffset-nowPosition;
         if(skip>0) {
-            count=reader.skip(skip);
-            assert(count==skip);
+            reader.byPass(skip);
         }
         //The PE signature that usually (but not necessarily) immediately follows the MS-DOS stub is a 4-byte item
         //PE Signature (4 Bytes)
@@ -84,7 +81,7 @@ public class ExeModel extends Assembly {
         }
         for(int i=0;i<size;i++) {
             if(sectionHeaders[i]==null) {
-                sectionHeaders[i]=new SectionHeader();
+                sectionHeaders[i]=new SectionHeader(this);
             }
             sectionHeaders[i].logger=this.logger;
             sectionHeaders[i].parse(reader);

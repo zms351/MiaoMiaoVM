@@ -125,4 +125,9 @@ public class InputStreamReader extends InputStream implements Closeable {
         this.position += n;
     }
 
+    public void byPass(long n) throws IOException {
+        long r=super.skip(n);
+        assert(r==n);
+    }
+
 }

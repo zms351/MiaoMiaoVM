@@ -10,6 +10,11 @@ import java.io.IOException;
 public class SectionHeader extends BaseDataModel {
 
     Logger logger;
+    ExeModel parent;
+
+    SectionHeader(ExeModel parent) {
+        this.parent=parent;
+    }
 
     /**
      * Name (8-byte ASCII string): Represents the name of the section. Section names start with a dot (for instance, .reloc). If the section name contains exactly eight characters, the null ter- minator is omitted. If the section name has fewer than eight characters, the array Name is padded with null characters. Image files cannot have section names with more than eight characters. In object files, however, section names can be longer. (Imagine a long-winded file generator emitting a section named .myownsectionnobodyelsecouldevergrok.) In this case, the name is placed in the string table, and the field contains the slash (/) character in the first byte, followed by an ASCII string containing a decimal representation of the respective offset in the string table.
@@ -136,7 +141,7 @@ public class SectionHeader extends BaseDataModel {
         String name = this.getName();
         Class<? extends SectionData> klass = SectionHeader.getDataClassByName(name);
         if(klass==null) {
-            logger.warn("don't support section header %s",name);
+            logger.warn("don't support section header %s", name);
             return;
         }
         if(this.data==null || !klass.equals(this.data.getClass())) {
@@ -221,6 +226,10 @@ public class SectionHeader extends BaseDataModel {
         } else {
             return null;
         }
+    }
+
+    public ExeModel getParent() {
+        return parent;
     }
 
 }

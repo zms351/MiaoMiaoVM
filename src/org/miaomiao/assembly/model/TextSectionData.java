@@ -12,6 +12,7 @@ public class TextSectionData extends SectionData {
 
     @Override
     public void parse(InputStreamReader reader) throws IOException, LoadException {
+        super.jumpToStart(reader);
     }
 
 }
