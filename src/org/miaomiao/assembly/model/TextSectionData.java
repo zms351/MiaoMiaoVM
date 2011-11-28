@@ -23,23 +23,75 @@ public class TextSectionData extends SectionData {
         this.peHeader = super.getHeader().getParent().getPeHeader();
         this.parseIAT(reader);
         this.parseCLRuntimeHeader(reader);
+        this.parseSNSH(reader);
+        this.parseSEHT(reader);
+        this.parseDD(reader);
     }
 
+    /**
+     * Import Address Table
+     *
+     * @param reader
+     * @throws IOException
+     * @throws LoadException
+     */
     protected void parseIAT(InputStreamReader reader) throws IOException, LoadException {
         ImageDataDirectory entry = peHeader.getIATEntry();
-        super.jumpToEntry(entry,reader,peHeader.getBaseOfCode());
-        //todo
+        if (entry.getSize() > 0) {
+            super.jumpToEntry(entry, reader, peHeader.getBaseOfCode());
+            //todo
+        }
     }
 
+    /**
+     * CLR Header
+     *
+     * @param reader
+     * @throws IOException
+     * @throws LoadException
+     */
     protected void parseCLRuntimeHeader(InputStreamReader reader) throws IOException, LoadException {
         ImageDataDirectory entry = peHeader.getCLRHEntry();
         super.jumpToEntry(entry, reader, peHeader.getBaseOfCode());
 
-        if(runtimeHeader==null) {
-            runtimeHeader=new CLRuntimeHeader();
+        if (runtimeHeader == null) {
+            runtimeHeader = new CLRuntimeHeader();
         }
-        runtimeHeader.logger=this.logger;
+        runtimeHeader.logger = this.logger;
         runtimeHeader.parse(reader);
+    }
+
+    /**
+     * Strong Name Signature Hash
+     *
+     * @param reader
+     * @throws IOException
+     * @throws LoadException
+     */
+    protected void parseSNSH(InputStreamReader reader) throws IOException, LoadException {
+        //todo
+    }
+
+    /**
+     * Structured Exception Handling Tables
+     *
+     * @param reader
+     * @throws IOException
+     * @throws LoadException
+     */
+    protected void parseSEHT(InputStreamReader reader) throws IOException, LoadException {
+        //todo
+    }
+
+    /**
+     * Debug Directory
+     *
+     * @param reader
+     * @throws IOException
+     * @throws LoadException
+     */
+    protected void parseDD(InputStreamReader reader) throws IOException, LoadException {
+        //todo
     }
 
 }
