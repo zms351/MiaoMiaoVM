@@ -1,11 +1,15 @@
 package org.miaomiao.assembly.model;
 
+import org.jetbrains.annotations.Nullable;
 import org.miaomiao.assembly.LoadException;
 import org.miaomiao.loader.InputStreamReader;
+import org.miaomiao.util.Logger;
 
 import java.io.IOException;
 
 public class SectionHeader extends BaseDataModel {
+
+    Logger logger;
 
     /**
      * Name (8-byte ASCII string): Represents the name of the section. Section names start with a dot (for instance, .reloc). If the section name contains exactly eight characters, the null ter- minator is omitted. If the section name has fewer than eight characters, the array Name is padded with null characters. Image files cannot have section names with more than eight characters. In object files, however, section names can be longer. (Imagine a long-winded file generator emitting a section named .myownsectionnobodyelsecouldevergrok.) In this case, the name is placed in the string table, and the field contains the slash (/) character in the first byte, followed by an ASCII string containing a decimal representation of the respective offset in the string table.
@@ -109,6 +113,8 @@ public class SectionHeader extends BaseDataModel {
      */
     public static final int Flag_MEM_WRITE = 0x80000000;
 
+    private SectionData data;
+
     @Override
     public void parse(InputStreamReader reader) throws IOException, LoadException {
         if (nameBytes == null) {
@@ -124,6 +130,24 @@ public class SectionHeader extends BaseDataModel {
         this.numberOfRelocations = reader.readUnsignedShort();
         this.numberOfLinenumbers = reader.readUnsignedShort();
         this.characteristics = reader.readUnsignedInt();
+    }
+
+    public void parseData(InputStreamReader reader) throws IOException, LoadException {
+        String name = this.getName();
+        Class<? extends SectionData> klass = SectionHeader.getDataClassByName(name);
+        if(klass==null) {
+            logger.warn("don't support section header %s",name);
+            return;
+        }
+        if(this.data==null || !klass.equals(this.data.getClass())) {
+            try {
+                this.data=klass.newInstance();
+            } catch (Throwable t) {
+                logger.error(t);
+                return;
+            }
+        }
+        this.data.parse(reader);
     }
 
     public byte[] getNameBytes() {
@@ -176,6 +200,26 @@ public class SectionHeader extends BaseDataModel {
 
     public long getCharacteristics() {
         return characteristics;
+    }
+
+    public SectionData getData() {
+        return data;
+    }
+
+    public static @Nullable Class<? extends SectionData> getDataClassByName(String name) {
+        if(".text".equals(name)) {
+            return TextSectionData.class;
+        } else if(".sdata".equals(name)) {
+            return SDataSectionData.class;
+        } else if(".reloc".equals(name)) {
+            return RelocSectionData.class;
+        } else if(".rsrc".equals(name)) {
+            return RsrcSectionData.class;
+        } else if(".tls".equals(name)) {
+            return TlsSectionData.class;
+        } else {
+            return null;
+        }
     }
 
 }

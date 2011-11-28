@@ -2,16 +2,16 @@ package org.miaomiao.assembly.model;
 
 import org.miaomiao.assembly.*;
 import org.miaomiao.loader.InputStreamReader;
+import org.miaomiao.util.Logger;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 /**
  * data model for a executable file (.exe or .dll)
  */
 public class ExeModel extends Assembly {
 
-    private Logger logger=Logger.getLogger(this.getClass().getName());
+    private Logger logger=Logger.getLogger(this.getClass());
 
     /**
      * 00h  old style exe header  32 bytes
@@ -25,14 +25,22 @@ public class ExeModel extends Assembly {
      * 224 bytes
      */
     private PEHeader peHeader;
+    /**
+     * The NumberOfSections field of the COFF header defines the number of entries in the section header table. The section header indexing in the table is one-based, with the order of the sections defined by the linker. The sections follow one another contiguously in the order defined by the section header table, with (as you already know) starting RVAs aligned by the value of the SectionAlignment field of the PE header.
+     * A section header is a 40-byte structure
+     */
     private SectionHeader[] sectionHeaders;
+    /**
+     * InputStream start position
+     */
+    private int basePosition;
 
     @Override
     public void parse(InputStreamReader reader) throws IOException, LoadException {
         if (this.oldHeader == null) {
             this.oldHeader = new OldStyleExeHeader();
         }
-        int basePosition=reader.getPosition();
+        int basePosition=this.basePosition=reader.getPosition();
         //ms-dos header 64 bytes
         //old style dos header 32 bytes
         this.oldHeader.parse(reader);
@@ -47,7 +55,7 @@ public class ExeModel extends Assembly {
         count=reader.skip(0x40);
         assert(count==0x40);
         int nowPosition=reader.getPosition();
-        logger.finest(String.valueOf(nowPosition));
+        logger.debug("now position %d",nowPosition);
         long skip=basePosition+dataOffset-nowPosition;
         if(skip>0) {
             count=reader.skip(skip);
@@ -78,7 +86,12 @@ public class ExeModel extends Assembly {
             if(sectionHeaders[i]==null) {
                 sectionHeaders[i]=new SectionHeader();
             }
+            sectionHeaders[i].logger=this.logger;
             sectionHeaders[i].parse(reader);
+        }
+        logger.debug("after parse section headers,it's at %d",reader.getPosition());
+        for (SectionHeader sectionHeader : sectionHeaders) {
+            sectionHeader.parseData(reader);
         }
     }
 
@@ -96,6 +109,10 @@ public class ExeModel extends Assembly {
 
     public SectionHeader[] getSectionHeaders() {
         return sectionHeaders;
+    }
+
+    public int getBasePosition() {
+        return basePosition;
     }
 
 }

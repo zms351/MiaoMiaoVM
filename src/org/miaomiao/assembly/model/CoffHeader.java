@@ -2,10 +2,10 @@ package org.miaomiao.assembly.model;
 
 import org.miaomiao.assembly.LoadException;
 import org.miaomiao.loader.InputStreamReader;
+import org.miaomiao.util.Logger;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.logging.Logger;
 
 public class CoffHeader extends BaseDataModel {
 
@@ -108,10 +108,10 @@ public class CoffHeader extends BaseDataModel {
     @Override
     public void parse(InputStreamReader reader) throws IOException, LoadException {
         this.machine = reader.readUnsignedShort();
-        logger.finest(String.valueOf(this.machine));
+        logger.debug(this.machine);
         this.numberOfSections = reader.readUnsignedShort();
         this.timeDateStamp = reader.readUnsignedInt();
-        logger.info(String.valueOf(new Date(timeDateStamp * 1000)));
+        logger.debug(new Date(timeDateStamp * 1000));
         //File pointer of the COFF symbol table. As this table is never used in managed PE files, this field must be set to 0.
         long PointerToSymbolTable = reader.readUnsignedInt();
         assert (PointerToSymbolTable == 0);

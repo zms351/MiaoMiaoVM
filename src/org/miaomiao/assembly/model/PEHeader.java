@@ -2,9 +2,9 @@ package org.miaomiao.assembly.model;
 
 import org.miaomiao.assembly.LoadException;
 import org.miaomiao.loader.InputStreamReader;
+import org.miaomiao.util.Logger;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 public class PEHeader extends BaseDataModel {
 
@@ -214,7 +214,7 @@ public class PEHeader extends BaseDataModel {
         }
         this.loaderFlags=reader.readUnsignedInt();
         this.numberOfRvaAndSizes=reader.readUnsignedInt();
-        logger.info("read header "+(reader.getPosition()-startPosition)+" bytes");
+        logger.debug("read header %d  bytes",reader.getPosition()-startPosition);
         //The data directory table starts at offset 96 in a 32-bit PE header and at offset 112 in a 64-bit PE header.
         //Sixteen standard data directories are defined in the data directory table
         if(dataDirectoryTable==null) {
