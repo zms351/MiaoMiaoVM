@@ -126,6 +126,7 @@ public class InputStreamReader extends InputStream implements Closeable {
     }
 
     public void byPass(long n) throws IOException {
+        assert(n>=0);
         long r=super.skip(n);
         assert(r==n);
     }

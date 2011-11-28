@@ -11,6 +11,11 @@ public abstract class SectionData extends BaseDataModel {
     Logger logger=Logger.getLogger(this.getClass());
 
     protected SectionHeader header;
+    protected int basePosition;
+
+    public int getBasePosition() {
+        return basePosition;
+    }
 
     public SectionHeader getHeader() {
         return header;
@@ -29,6 +34,13 @@ public abstract class SectionData extends BaseDataModel {
         SectionHeader header=this.getHeader();
         long jump=header.getPointerToRawData()-(reader.getPosition()-header.getParent().getBasePosition());
         logger.debug("%s jump to start by %d",getHeader().getName(),jump);
+        reader.byPass(jump);
+        this.basePosition=reader.getPosition();
+    }
+    
+    protected void jumpToEntry(ImageDataDirectory entry,InputStreamReader reader,long vBase) throws IOException {
+        long jump=entry.getVirtualAddress() - vBase - (reader.getPosition() - this.getBasePosition());
+        logger.debug("jump to entry by pass %d",jump);
         reader.byPass(jump);
     }
 

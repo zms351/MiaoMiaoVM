@@ -108,7 +108,7 @@ public class CoffHeader extends BaseDataModel {
     @Override
     public void parse(InputStreamReader reader) throws IOException, LoadException {
         this.machine = reader.readUnsignedShort();
-        logger.debug(this.machine);
+        logger.debug("machine: %d",this.machine);
         this.numberOfSections = reader.readUnsignedShort();
         this.timeDateStamp = reader.readUnsignedInt();
         logger.debug(new Date(timeDateStamp * 1000));

@@ -10,9 +10,35 @@ import java.io.IOException;
  */
 public class TextSectionData extends SectionData {
 
+    private CLRuntimeHeader runtimeHeader;
+    private PEHeader peHeader;
+
+    public CLRuntimeHeader getRuntimeHeader() {
+        return runtimeHeader;
+    }
+
     @Override
     public void parse(InputStreamReader reader) throws IOException, LoadException {
         super.jumpToStart(reader);
+        this.peHeader = super.getHeader().getParent().getPeHeader();
+        this.parseIAT(reader);
+        this.parseCLRuntimeHeader(reader);
+    }
+
+    protected void parseIAT(InputStreamReader reader) throws IOException, LoadException {
+        ImageDataDirectory entry = peHeader.getIATEntry();
+        super.jumpToEntry(entry,reader,peHeader.getBaseOfCode());
+        //todo
+    }
+
+    protected void parseCLRuntimeHeader(InputStreamReader reader) throws IOException, LoadException {
+        ImageDataDirectory entry = peHeader.getCLRHEntry();
+        super.jumpToEntry(entry, reader, peHeader.getBaseOfCode());
+
+        if(runtimeHeader==null) {
+            runtimeHeader=new CLRuntimeHeader();
+        }
+        runtimeHeader.parse(reader);
     }
 
 }
