@@ -25,7 +25,7 @@ public class SectionHeader extends BaseDataModel {
      * } Misc
      * PhysicalAddress/VirtualSize (4-byte unsigned integer): In image files, this field holds the actual (unaligned) size in bytes of the code or data in this section.
      */
-    private long physicalAddress;
+    private long virtualSize;
     /**
      * VirtualAddress (4-byte unsigned integer): Despite its name, this field holds the RVA of the beginning of the section.
      */
@@ -124,7 +124,7 @@ public class SectionHeader extends BaseDataModel {
             nameBytes = new byte[8];
         }
         reader.readFully(this.nameBytes);
-        this.physicalAddress = reader.readUnsignedInt();
+        this.virtualSize = reader.readUnsignedInt();
         this.virtualAddress = reader.readUnsignedInt();
         this.sizeOfRawData = reader.readUnsignedInt();
         this.pointerToRawData = reader.readUnsignedInt();
@@ -167,11 +167,11 @@ public class SectionHeader extends BaseDataModel {
     }
 
     public long getPhysicalAddress() {
-        return physicalAddress;
+        return getVirtualSize();
     }
 
     public long getVirtualSize() {
-        return getPhysicalAddress();
+        return virtualSize;
     }
 
     public long getVirtualAddress() {

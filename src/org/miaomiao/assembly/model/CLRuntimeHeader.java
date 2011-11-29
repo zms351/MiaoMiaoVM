@@ -74,8 +74,9 @@ public class CLRuntimeHeader extends BaseDataModel {
     /**
      * 64 8
      * Reserved for precompiled images; set to 0.
+     * Precompile Header
      */
-    private long managedNativeHeader;
+    private RVAAndSize managedNativeHeader;
 
     /**
      * The image file contains IL code only, with no embedded native unmanaged code except the start-up stub (which simply executes an indirect jump to the CLR entry point). Common language runtime–aware operating sys- tems (such as Windows XP and newer) ignore the start-up stub and invoke the CLR automatically, so for all practical purposes the file can be considered pure IL. However, setting this flag can cause certain problems when running under Windows XP and newer. If this flag is set, the OS loader of Windows XP and newer ignores not only the start-up stub but also the .reloc section, which in this case contains single relocation (or single pair of relocations in IA64-specific images) for the CLR entry point. However, the .reloc section can contain relocations for the beginning and end of the .tls section as well as relocations for what is referred to as data on data (that is, data constants that are pointers to other data constants). Among existing managed compilers, only the VC++ and the IL assembler can produce these items. The VC++ of v7.0 and v7.1 (corresponding to CLR versions 1.0 and 1.1) never set this flag because the image file it generated was never pure IL. In v2.0 this situation has changed, and currently, the VC++ and IL assembler are the only two capable of producing pure-IL image files that might require additional relocations in the .reloc section. To resolve this problem, the IL assembler, if TLS-based data or data on data is emitted, clears this flag and, if the target platform is 32-bit, sets the COMIMAGE_FLAGS_32BITREQUIRED flag instead.
@@ -141,8 +142,11 @@ public class CLRuntimeHeader extends BaseDataModel {
         }
         this.exportAddressTableJumps.parse(reader);
 
-        this.managedNativeHeader = reader.readUnsignedLong();
-        assert (managedNativeHeader == 0);
+        if(this.managedNativeHeader==null) {
+            managedNativeHeader=new RVAAndSize();
+        }
+        this.managedNativeHeader.parse(reader);
+        //assert (managedNativeHeader == 0);
         
         logger.debug("at position %d",reader.getPosition());
     }
@@ -191,8 +195,12 @@ public class CLRuntimeHeader extends BaseDataModel {
         return exportAddressTableJumps;
     }
 
-    public long getManagedNativeHeader() {
+    public RVAAndSize getManagedNativeHeader() {
         return managedNativeHeader;
+    }
+
+    public RVAAndSize getPrecompileHeader() {
+        return getManagedNativeHeader();
     }
 
 }
