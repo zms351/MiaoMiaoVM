@@ -2,7 +2,6 @@ package org.miaomiao.assembly.model;
 
 import org.miaomiao.assembly.*;
 import org.miaomiao.loader.InputStreamReader;
-import org.miaomiao.util.Logger;
 
 import java.io.IOException;
 
@@ -10,8 +9,6 @@ import java.io.IOException;
  * data model for a executable file (.exe or .dll)
  */
 public class ExeModel extends Assembly {
-
-    private Logger logger=Logger.getLogger(this.getClass());
 
     /**
      * 00h  old style exe header  32 bytes
@@ -66,13 +63,11 @@ public class ExeModel extends Assembly {
         if(coffHeader==null) {
             coffHeader=new CoffHeader();
         }
-        coffHeader.logger=this.logger;
         coffHeader.parse(reader);
         //The size of the PE header is not fixed. It depends on the number of data directories defined in the header and is specified in the SizeOfOptionalHeader field of the COFF header.
         if(peHeader==null) {
             peHeader=new PEHeader();
         }
-        peHeader.logger=this.logger;
         peHeader.parse(reader);
         //The table of section headers must immediately follow the PE header.
         int size=this.coffHeader.getNumberOfSections();
@@ -83,7 +78,6 @@ public class ExeModel extends Assembly {
             if(sectionHeaders[i]==null) {
                 sectionHeaders[i]=new SectionHeader(this);
             }
-            sectionHeaders[i].logger=this.logger;
             sectionHeaders[i].parse(reader);
         }
         logger.debug("after parse section headers,it's at %d",reader.getPosition());

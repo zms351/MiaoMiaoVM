@@ -2,13 +2,10 @@ package org.miaomiao.assembly.model;
 
 import org.miaomiao.assembly.LoadException;
 import org.miaomiao.loader.InputStreamReader;
-import org.miaomiao.util.Logger;
 
 import java.io.IOException;
 
 public abstract class SectionData extends BaseDataModel {
-
-    Logger logger=Logger.getLogger(this.getClass());
 
     protected SectionHeader header;
     protected int basePosition;

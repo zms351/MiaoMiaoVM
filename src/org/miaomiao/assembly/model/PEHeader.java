@@ -2,13 +2,10 @@ package org.miaomiao.assembly.model;
 
 import org.miaomiao.assembly.LoadException;
 import org.miaomiao.loader.InputStreamReader;
-import org.miaomiao.util.Logger;
 
 import java.io.IOException;
 
 public class PEHeader extends BaseDataModel {
-
-    Logger logger;
 
     /**
      * 2 1

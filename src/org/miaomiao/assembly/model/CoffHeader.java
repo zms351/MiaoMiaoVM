@@ -2,14 +2,13 @@ package org.miaomiao.assembly.model;
 
 import org.miaomiao.assembly.LoadException;
 import org.miaomiao.loader.InputStreamReader;
-import org.miaomiao.util.Logger;
 
 import java.io.IOException;
 import java.util.Date;
 
 public class CoffHeader extends BaseDataModel {
 
-    Logger logger;
+    
 
     /**
      * 0 2
@@ -32,6 +31,8 @@ public class CoffHeader extends BaseDataModel {
      * Time and date of file creation.
      */
     private long timeDateStamp;
+    private long pointerToSymbolTable;
+    private long numberOfSymbols;
     /**
      * 16 2
      * Size of the PE header. This field is specific to PE files; it is set to 0 in COFF files.
@@ -113,18 +114,22 @@ public class CoffHeader extends BaseDataModel {
         this.timeDateStamp = reader.readUnsignedInt();
         logger.debug(new Date(timeDateStamp * 1000));
         //File pointer of the COFF symbol table. As this table is never used in managed PE files, this field must be set to 0.
-        long PointerToSymbolTable = reader.readUnsignedInt();
-        assert (PointerToSymbolTable == 0);
+        this.pointerToSymbolTable = reader.readUnsignedInt();
+        //assert (pointerToSymbolTable == 0);
         //Number of entries in the COFF symbol table. This field must be set to 0 in managed PE files.
-        long NumberOfSymbols = reader.readUnsignedInt();
-        assert (NumberOfSymbols == 0);
+        this.numberOfSymbols = reader.readUnsignedInt();
+        //assert (numberOfSymbols == 0);
 
         this.sizeOfOptionalHeader = reader.readUnsignedShort();
         this.characteristics = reader.readUnsignedShort();
     }
 
-    public Logger getLogger() {
-        return logger;
+    public long getPointerToSymbolTable() {
+        return pointerToSymbolTable;
+    }
+
+    public long getNumberOfSymbols() {
+        return numberOfSymbols;
     }
 
     public int getMachine() {

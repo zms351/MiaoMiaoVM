@@ -3,13 +3,11 @@ package org.miaomiao.assembly.model;
 import org.jetbrains.annotations.Nullable;
 import org.miaomiao.assembly.LoadException;
 import org.miaomiao.loader.InputStreamReader;
-import org.miaomiao.util.Logger;
 
 import java.io.IOException;
 
 public class SectionHeader extends BaseDataModel {
 
-    Logger logger;
     ExeModel parent;
 
     SectionHeader(ExeModel parent) {

@@ -68,6 +68,14 @@ public class OldStyleExeHeader extends BaseDataModel {
      * 1A-1B	Overlay number. Normally zero, meaning that it's the main program.
      */
     private int overlayNumber;
+    /**
+     * 2
+     */
+    private int oemIdentifier;
+    /**
+     * 2
+     */
+    private int oemInfo;
 
     @Override
     public void parse(InputStreamReader reader) throws IOException, LoadException {
@@ -87,9 +95,16 @@ public class OldStyleExeHeader extends BaseDataModel {
         this.cs = reader.readUnsignedShort();
         this.relocTableOffset = reader.readUnsignedShort();
         this.overlayNumber = reader.readUnsignedShort();
+        this.oemIdentifier=reader.readUnsignedShort();
+        this.oemInfo=reader.readUnsignedShort();
+    }
 
-        long reserved = reader.readUnsignedInt();
-        assert (reserved == 0);
+    public int getOemIdentifier() {
+        return oemIdentifier;
+    }
+
+    public int getOemInfo() {
+        return oemInfo;
     }
 
     public int getLastBlockSize() {

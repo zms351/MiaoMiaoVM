@@ -57,7 +57,6 @@ public class TextSectionData extends SectionData {
         if (runtimeHeader == null) {
             runtimeHeader = new CLRuntimeHeader();
         }
-        runtimeHeader.logger = this.logger;
         runtimeHeader.parse(reader);
     }
 
