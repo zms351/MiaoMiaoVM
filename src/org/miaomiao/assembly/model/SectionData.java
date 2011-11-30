@@ -35,8 +35,8 @@ public abstract class SectionData extends BaseDataModel {
         this.basePosition=reader.getPosition();
     }
     
-    protected void jumpToEntry(ImageDataDirectory entry,InputStreamReader reader,long vBase) throws IOException {
-        long jump=entry.getVirtualAddress() - vBase - (reader.getPosition() - this.getBasePosition());
+    protected void jumpToEntry(RVAAndSize entry,InputStreamReader reader,long vBase) throws IOException {
+        long jump=entry.getAddress() - vBase - (reader.getPosition() - this.getBasePosition());
         logger.debug("jump to entry by pass %d",jump);
         reader.byPass(jump);
     }

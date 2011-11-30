@@ -12,7 +12,7 @@ public abstract class BaseDataModel {
 
     public abstract void parse(InputStreamReader reader) throws IOException,LoadException;
 
-    protected Logger getLogger() {
+    protected final Logger getLogger() {
         return logger;
     }
 
